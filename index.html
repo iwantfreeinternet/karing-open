@@ -8,13 +8,17 @@ font-family:system-ui,-apple-system,sans-serif;background:#0f1115;color:#e8eaed}
 .c{max-width:440px;padding:24px}a{color:#8ab4f8}p{color:#9aa0a6;font-size:14px}
 .b{display:block;margin:14px 0;padding:15px;border-radius:12px;background:#3b82f6;color:#fff;
 font-weight:600;text-decoration:none}.g{background:#2a2f3a}
+input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #333;border-radius:8px;
+background:#181b21;color:#e8eaed}
 </style></head><body><div class="c">
 <h2>Добавляем подписку в Karing</h2>
 <a class="b" id="open" href="#">Открыть Karing</a>
 <a class="b g" id="get" href="#">Скачать Karing</a>
 <p id="alt"></p>
 <p>Если ничего не произошло — откройте эту страницу в Safari или Chrome
-(меню ⋯ → «Открыть в браузере»).</p>
+(меню ⋯ → «Открыть в браузере») или добавьте подписку в Karing вручную по ссылке
+(нажмите на неё — она скопируется):</p>
+<input id="link" readonly onclick="this.select();navigator.clipboard&&navigator.clipboard.writeText(this.value)">
 </div>
 <script>
 var p = new URLSearchParams(location.hash.slice(1));
@@ -23,6 +27,7 @@ var q = "url=" + encodeURIComponent(url) + "&name=" + encodeURIComponent(p.get("
 var store = os == "ios" ? "https://apps.apple.com/us/app/karing/id6472431552"
                         : "https://github.com/KaringX/karing/releases/latest";
 var link = "karing://install-config?" + q;
+document.getElementById("link").value = url;
 if (os == "android") {                          // Chrome: если Karing нет — сам откроет store
   var a = document.createElement("a");
   a.href = link; a.textContent = "Другой способ открыть";
