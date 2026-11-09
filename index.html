@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Открыть в Karing</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;
+font-family:system-ui,-apple-system,sans-serif;background:#0f1115;color:#e8eaed}
+.c{max-width:440px;padding:24px}a{color:#8ab4f8}p{color:#9aa0a6;font-size:14px}
+.b{display:block;margin:14px 0;padding:15px;border-radius:12px;background:#3b82f6;color:#fff;
+font-weight:600;text-decoration:none}.g{background:#2a2f3a}
+</style></head><body><div class="c">
+<h2>Добавляем подписку в Karing</h2>
+<a class="b" id="open" href="#">Открыть Karing</a>
+<a class="b g" id="get" href="#">Скачать Karing</a>
+<p id="alt"></p>
+<p>Если ничего не произошло — откройте эту страницу в Safari или Chrome
+(меню ⋯ → «Открыть в браузере»).</p>
+</div>
+<script>
+var p = new URLSearchParams(location.hash.slice(1));
+var os = p.get("os") || "", url = p.get("url") || "";
+var q = "url=" + encodeURIComponent(url) + "&name=" + encodeURIComponent(p.get("name") || "VPN");
+var store = os == "ios" ? "https://apps.apple.com/us/app/karing/id6472431552"
+                        : "https://github.com/KaringX/karing/releases/latest";
+var link = "karing://install-config?" + q;
+if (os == "android") {                          // Chrome: если Karing нет — сам откроет store
+  var a = document.createElement("a");
+  a.href = link; a.textContent = "Другой способ открыть";
+  document.getElementById("alt").appendChild(a);
+  link = "intent://install-config?" + q + "#Intent;scheme=karing;package=com.nebula.karing;" +
+         "S.browser_fallback_url=" + encodeURIComponent(store) + ";end";
+}
+document.getElementById("open").href = link;
+document.getElementById("get").href = store;
+var left = false;
+function away() { left = true; }
+document.addEventListener("visibilitychange", function () { if (document.hidden) away(); });
+window.addEventListener("pagehide", away);
+window.addEventListener("blur", away);
+if (url) {
+  location.href = link;                         // сразу открываем Karing
+  if (os == "ios")                              // не открылся — значит, его нет: в App Store
+    setTimeout(function () { if (!left) location.href = store; }, 3500);
+}
+</script></body></html>
