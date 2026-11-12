@@ -12,6 +12,7 @@ input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #333;border
 background:#181b21;color:#e8eaed}
 </style></head><body><div class="c">
 <h2>Добавляем подписку в Karing</h2>
+<p id="os"></p>
 <a class="b" id="open" href="#">Открыть Karing</a>
 <a class="b g" id="get" href="#">Скачать Karing</a>
 <p id="alt"></p>
@@ -21,9 +22,17 @@ background:#181b21;color:#e8eaed}
 <input id="link" readonly onclick="this.select();navigator.clipboard&&navigator.clipboard.writeText(this.value)">
 </div>
 <script>
+// Одно устройство — одна кнопка: ОС определяется здесь, на GitHub Pages.
 var p = new URLSearchParams(location.hash.slice(1));
-var os = p.get("os") || "", url = p.get("url") || "";
-var q = "url=" + encodeURIComponent(url) + "&name=" + encodeURIComponent(p.get("name") || "VPN");
+var url = p.get("url") || "", name = p.get("name") || "VPN";
+var ua = navigator.userAgent || "";
+var os = /android/i.test(ua) ? "android"
+       : /iphone|ipad|ipod/i.test(ua) ? "ios"
+       : /macintosh|mac os x/i.test(ua) ? "macos"
+       : /windows/i.test(ua) ? "windows" : "linux";
+var names = { ios: "iPhone / iPad", android: "Android", macos: "macOS", windows: "Windows", linux: "Linux" };
+document.getElementById("os").textContent = "Устройство: " + names[os];
+var q = "url=" + encodeURIComponent(url) + "&name=" + encodeURIComponent(name);
 var store = os == "ios" ? "https://apps.apple.com/us/app/karing/id6472431552"
                         : "https://github.com/KaringX/karing/releases/latest";
 var link = "karing://install-config?" + q;
